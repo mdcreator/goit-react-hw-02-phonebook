@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
+import s from './ContactForm.module.css';
+
 class ContactForm extends Component {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired,
@@ -11,8 +13,8 @@ class ContactForm extends Component {
     number: '',
   };
 
-  handleInputChange = ({ target }) => {
-    const { name, value } = target;
+  handleInputChange = e => {
+    const { name, value } = e.currentTarget;
     this.setState({ [name]: value });
   };
 
@@ -28,26 +30,30 @@ class ContactForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleOnSubmit}>
-        <label>
-          Name
+      <form className={s.form} onSubmit={this.handleOnSubmit}>
+        <div className={s.formField}>
+          <label className={s.formLabel}>Name</label>
           <input
+            className={s.formInput}
             type="text"
+            placeholder=""
             name="name"
             value={this.state.name}
             onChange={this.handleInputChange}
           />
-        </label>
+        </div>
 
-        <label>
-          Number
+        <div className={s.formField}>
+          <label className={s.formLabel}>Number</label>
           <input
+            className={s.formInput}
             type="text"
+            placeholder=""
             name="number"
             value={this.state.number}
             onChange={this.handleInputChange}
           />
-        </label>
+        </div>
 
         <button type="submit">Add contact</button>
       </form>

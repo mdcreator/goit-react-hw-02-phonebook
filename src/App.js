@@ -1,10 +1,11 @@
 import { Component } from 'react';
 import shortid from 'shortid';
+
 import ContactForm from './components/ContactForm';
 import Filter from './components/Filter';
 import ContactList from './components/ContactList';
 
-// import Container from './components/Container';
+import Container from './components/Container';
 
 class App extends Component {
   state = {
@@ -17,15 +18,15 @@ class App extends Component {
     filter: '',
   };
 
-  formSubmitHandler = data => {
-    const contactNames = this.state.contacts.map(contact =>
-      contact.name.toLowerCase(),
-    );
-    if (contactNames.includes(data.name.toLowerCase())) {
-      alert(`${data.name} is already in contacts`);
-      return;
-    }
-  };
+  // formSubmitHandler = data => {
+  //   const contactNames = this.state.contacts.map(contact =>
+  //     contact.name.toLowerCase(),
+  //   );
+  //   if (contactNames.includes(data.name.toLowerCase())) {
+  //     alert(`${data.name} is already in contacts`);
+  //     return;
+  //   }
+  // };
 
   addContact = ({ name, number }) => {
     const contact = {
@@ -33,9 +34,22 @@ class App extends Component {
       name,
       number,
     };
-    this.setState(contacts => ({
-      contacts: [contact, ...contacts],
-    }));
+
+    const { contacts } = this.state;
+
+    if (
+      contacts.find(
+        ({ name }) => contact.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      alert(`${name} is already in contacts`);
+    } else if (contact.number === '') {
+      alert(`${name} please add phone number`);
+    } else {
+      this.setState(({ contacts }) => ({
+        contacts: [contact, ...contacts],
+      }));
+    }
   };
 
   deleteContact = contactId => {
@@ -44,9 +58,9 @@ class App extends Component {
     }));
   };
 
-  changeFilter = value => {
+  changeFilter = e => {
     // const { filter, value } = target;
-    this.setState({ filter: value });
+    this.setState({ filter: e.currentTarget.value });
   };
 
   getVisibleFilter = () => {
@@ -64,15 +78,17 @@ class App extends Component {
 
     return (
       <div>
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.formSubmitHandler} />
+        <Container>
+          <h1>Phonebook</h1>
+          <ContactForm onSubmit={this.addContact} />
 
-        <h2>Contacts</h2>
-        <Filter value={filter} onChange={this.changeFilter} />
-        <ContactList
-          contacts={visibleFilter}
-          onDeleteContact={this.deleteContact}
-        />
+          <h2>Contacts</h2>
+          <Filter value={filter} onChange={this.changeFilter} />
+          <ContactList
+            contacts={visibleFilter}
+            onDeleteContact={this.deleteContact}
+          />
+        </Container>
       </div>
     );
   }
